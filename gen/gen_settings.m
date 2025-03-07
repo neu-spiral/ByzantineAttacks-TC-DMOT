@@ -19,7 +19,102 @@ function settings =  gen_settings(varargin)
     
     % --- Switching among 3 Scenarios in the paper
     switch p.Results.case_id
-        case 1 % Scenario 1 
+        case "attack_00" % Scenario 1 
+            
+            settings.K = 85;                                                                        %search time
+            settings.limit = [-500,1500;0,1000];                                                    %search area
+            
+            if p.Results.n_sensors > 0
+                n_sensors = p.Results.n_sensors;                                                    %input number of sensors, max = 2 for this case
+            else
+                n_sensors = 3;                                                                      %default number of sensors
+            end
+
+            if p.Results.sel_pd > 0
+                sel_pd = p.Results.sel_pd;                                                          %input detection probability
+            else
+                sel_pd = 0.98;                                                                      %default detection probability
+            end
+
+            init_source_pos = [0 0; 1000 0; 1800 0]';                                              %initial two sensor positions
+            malicious_flag = [0,1,0];
+            for i = 1 : n_sensors
+                settings.source_info{i}.source_id = i;
+                settings.source_info{i}.source_pos = init_source_pos(:,i);
+                settings.source_info{i}.malicious_flag = malicious_flag(i);
+            end
+            
+            for i = 1:n_sensors
+                settings.source_info{i}.P_D = sel_pd;                                              % sensor detection probability
+            end
+        
+            % Define neighbors (adjusted for 3 sensors)
+            settings.source_info{1}.neighbor_id = [2, 3];                                         % Sensor 1 neighbors
+            settings.source_info{2}.neighbor_id = [1, 3];                                         % Sensor 2 neighbors
+            settings.source_info{3}.neighbor_id = [1, 2];                                         % Sensor 3 neighbors
+
+            settings.fov_angle = 60;                                                                %FoV angle (deg)
+            settings.fov_center = 90;                                                               %FoV Center (deg) of [fov_center-fov_angle, fov_center + fov_angle]
+            settings.rD_max = 800;                                                                  %maximum detection range (m)
+
+            % object info
+            settings.xstart(:,1)  = [-200; 17; 450; 0];       settings.tbirth(1)  = 1;           settings.tdeath(1)  = 80;
+            settings.xstart_attack(:,1)  = [ 280; 10 ; 450; 0 ];         settings.tbirth_attack(1)  = 17;          settings.tdeath_attack(1)  = 80;
+
+            settings.xstart(:,2)  = [2550; -17; 400; 0];      settings.tbirth(2)  = 28;           settings.tdeath(2)  = 80;
+                        settings.sigma_v_truth = 0.1;                                                           %small processing noise in generating ground truth
+            
+            % track matching
+            settings.winlen_lm = 5;                                                                 %window length to use for track matching
+
+        case "attack_01" % Scenario 1 
+            
+            settings.K = 85;                                                                        %search time
+            settings.limit = [-500,1500;0,1000];                                                    %search area
+            
+            if p.Results.n_sensors > 0
+                n_sensors = p.Results.n_sensors;                                                    %input number of sensors, max = 2 for this case
+            else
+                n_sensors = 3;                                                                      %default number of sensors
+            end
+
+            if p.Results.sel_pd > 0
+                sel_pd = p.Results.sel_pd;                                                          %input detection probability
+            else
+                sel_pd = 0.98;                                                                      %default detection probability
+            end
+
+            init_source_pos = [0 0; 1000 0; 1800 0]';                                              %initial two sensor positions
+            malicious_flag = [0,1,0];
+            for i = 1 : n_sensors
+                settings.source_info{i}.source_id = i;
+                settings.source_info{i}.source_pos = init_source_pos(:,i);
+                settings.source_info{i}.malicious_flag = malicious_flag(i);
+            end
+            
+            for i = 1:n_sensors
+                settings.source_info{i}.P_D = sel_pd;                                              % sensor detection probability
+            end
+        
+            % Define neighbors (adjusted for 3 sensors)
+            settings.source_info{1}.neighbor_id = [2, 3];                                         % Sensor 1 neighbors
+            settings.source_info{2}.neighbor_id = [1, 3];                                         % Sensor 2 neighbors
+            settings.source_info{3}.neighbor_id = [1, 2];                                         % Sensor 3 neighbors
+
+            settings.fov_angle = 60;                                                                %FoV angle (deg)
+            settings.fov_center = 90;                                                               %FoV Center (deg) of [fov_center-fov_angle, fov_center + fov_angle]
+            settings.rD_max = 800;                                                                  %maximum detection range (m)
+
+            % object info
+            settings.xstart(:,1)  = [-200; 17; 450; 0];       settings.tbirth(1)  = 1;           settings.tdeath(1)  = 80;
+            settings.xstart_attack(:,1)  = [ 280; 10 ; 450; 0 ];         settings.tbirth_attack(1)  = 17;          settings.tdeath_attack(1)  = 80;
+
+            settings.xstart(:,2)  = [2550; -17; 400; 0];      settings.tbirth(2)  = 28;           settings.tdeath(2)  = 80;
+                        settings.sigma_v_truth = 0.1;                                                           %small processing noise in generating ground truth
+            
+            % track matching
+            settings.winlen_lm = 5;          
+        case "1" % Scenario 1 
             
             settings.K = 80;                                                                        %search time
             settings.limit = [-500,1500;0,1000];                                                    %search area
@@ -37,9 +132,11 @@ function settings =  gen_settings(varargin)
             end
 
             init_source_pos = [200 0; 800 0]';                                                      %initial two sensor positions
+            malicious_flag = [0,0];
             for i = 1 : n_sensors
                 settings.source_info{i}.source_id = i;
                 settings.source_info{i}.source_pos = init_source_pos(:,i);
+                settings.source_info{i}.malicious_flag = malicious_flag(i);
             end
             
             settings.source_info{1}.P_D = sel_pd;                                                   %sensor  detection probability
@@ -61,7 +158,7 @@ function settings =  gen_settings(varargin)
             % track matching
             settings.winlen_lm = 5;                                                                 %window length to use for track matching
         
-        case 2 % Scenario 2 
+        case "2" % Scenario 2 
             
             settings.K = 80;                                                                        %search time
             settings.limit = [-500,1800;-100,1000];                                                 %search area
@@ -126,7 +223,7 @@ function settings =  gen_settings(varargin)
             % track matching
             settings.winlen_lm = 5;                                                                 %window length to use for track matching
         
-        case 3 % Scenario 3 
+        case "3" % Scenario 3 
             
             settings.K = 75;                                                                        %search time
             settings.limit = [-1000,1000;-1000,1000];                                               %search area

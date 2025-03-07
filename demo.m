@@ -4,11 +4,21 @@ restoredefaultpath; matlabrc;
 add_paths;
 rng(0);                                                                                                         % default seed (0)
 
+% Scenarios FUSION 2025 Helena Calatrava
+% 'case_id' = "attack_00": 
+% 'case_id' = "attack_01": 
+
 % --- initialisation
-settings =  gen_settings('case_id',1,'sel_pd',0.98);                                                            % generate settings for a scenario
+case_id = "attack_01";
+settings =  gen_settings('case_id',case_id,'sel_pd',0.98);                                                            % generate settings for a scenario
 model = gen_model(settings,'meas_sigma',10,'lambda_c',10,'track_threshold',0.001,'metric_type','ospa_union');   % generate model parameters
-truth = gen_truth(model,settings);                                                                              % generate ground truths
-[~,colorarray] = plot_truth(settings.source_info, model, truth);                                                % plot the current truths
+truth = gen_truth(model,settings);                                                                        % generate ground truths
+plot_flags.show_time_labels = false; % Show time step numbers
+plot_flags.show_fake_trajectory = true; % Show attack trajectory
+[~,colorarray] = plot_truth(settings.source_info, model, truth, plot_flags);
+figure;
+plot_flags.show_time_labels = true; % Show time step numbers
+[~,colorarray] = plot_truth(settings.source_info, model, truth, plot_flags);         % plot the current truths
 meas = gen_all_meas(settings,model,truth);                                                                      % generate measurements
 
 % --- main fusion program
