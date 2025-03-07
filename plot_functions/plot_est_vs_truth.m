@@ -35,6 +35,13 @@ function plot_est_vs_truth(model, settings, truth, fused_agents,varargin)
        assigncolor(truth.L{k_birth(i)}(i)) ;
     end
     figure();
+        % --- Set figure position (ensures same window size & location)
+    set(gcf, 'Position', [ 1100,         630 ,        648,         263]); % 3 sensors
+    % set(gcf, 'Position', [ -665,    98,   514,   218]); % 3 sensors
+    % --- Set axis limits (ensures consistent zoom level)
+    xlim([-331.1, 2509.8]);  % Corrected X-axis limits
+    ylim([0, 848.2465]);  % Corrected Y-axis limits
+    %axis square;
     hold on; 
     plot_fov(source_info,model.fov_range,model.rD_max);
     
@@ -116,8 +123,8 @@ function plot_est_vs_truth(model, settings, truth, fused_agents,varargin)
     title(['Estimated vs Truth using ', fused_strategy, ' at Node ', num2str(sel_agent)]);
     xlabel('x-coordinate (m)', 'FontSize', font_size);
     ylabel('y-coordinate (m)', 'FontSize', font_size);
-    xlim(model.limit(1,:));
-    ylim(model.limit(2,:) );     
+    % xlim(model.limit(1,:));
+    % ylim(model.limit(2,:) );     
     set(gcf,'color','w');
     set(gca, 'FontSize', font_size, 'FontName', font_name);
     grid on;

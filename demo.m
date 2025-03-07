@@ -2,16 +2,19 @@ clearvars;
 close all; 
 restoredefaultpath; matlabrc;
 add_paths;
-rng(0);                                                                                                         % default seed (0)
+rng(2);                                                                                                         % default seed (0)
 
 % Scenarios FUSION 2025 Helena Calatrava
 % 'case_id' = "attack_00": 
 % 'case_id' = "attack_01": 
 
 % --- initialisation
-case_id = "attack_01";
+case_id = "1";
+case_id = "attack_00";
+lambda_c = 1; % very small for fast experiment (but then we need to force detections in generation)
 settings =  gen_settings('case_id',case_id,'sel_pd',0.98);                                                            % generate settings for a scenario
-model = gen_model(settings,'meas_sigma',10,'lambda_c',10,'track_threshold',0.001,'metric_type','ospa_union');   % generate model parameters
+model = gen_model(settings,'meas_sigma',2,'sigma_v',5,'lambda_c',lambda_c,'track_threshold',0.001,'metric_type','ospa_union');   % generate model parameters
+model.force_detections=1;
 truth = gen_truth(model,settings);                                                                        % generate ground truths
 plot_flags.show_time_labels = false; % Show time step numbers
 plot_flags.show_fake_trajectory = true; % Show attack trajectory
@@ -19,13 +22,15 @@ plot_flags.show_fake_trajectory = true; % Show attack trajectory
 figure;
 plot_flags.show_time_labels = true; % Show time step numbers
 [~,colorarray] = plot_truth(settings.source_info, model, truth, plot_flags);         % plot the current truths
-meas = gen_all_meas(settings,model,truth);                                                                      % generate measurements
+meas = gen_all_meas(settings, model, truth);
+plot_measurements(settings, model, meas, truth);
+                                                             % generate measurements
 
 % --- main fusion program
 fused_agents = run_fused_filter(settings,model,truth,meas);
 
 % --- report results
-sel_agent = 2;
+sel_agent = 3;
 report_single_result(sel_agent,fused_agents); 
 
 % --- plot results

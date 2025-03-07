@@ -11,7 +11,11 @@ function meas= gen_meas(model,truth,source_info,fov_shape)
     for k=1:truth.K
         if truth.N(k) > 0
             pD = compute_pD(model, truth.X{k},fov_shape);
-            idx= rand(truth.N(k),1) <= pD ;                                            %detected target indices
+            if ~model.force_detections
+                idx= rand(truth.N(k),1) <= pD ;                                            %detected target indices
+            else
+                idx=(pD>0);
+            end
             meas.Z{k}= gen_observation_fn(model,truth.X{k}(:,idx),'noise');                          %single target observations if detected 
         end
         N_c = poissrnd(model.lambda_c);                                                               %number of clutter points

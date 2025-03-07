@@ -10,6 +10,7 @@ function model= gen_model(settings,varargin)
     addParameter(p,'meas_sigma',10);                                                                %measurement noise
     addParameter(p,'track_threshold',1e-4);                                                         %track threshold
     addParameter(p,'metric_type','ospa_union');                                                     %metric type, possible values: {'ospa_union','wasserstein'}
+    addParameter(p, 'sigma_v', 5);
     parse(p, varargin{:});
     model.p.Results = p.Results;                                                                    %store input variable values
     
@@ -17,6 +18,7 @@ function model= gen_model(settings,varargin)
     lambda_c = p.Results.lambda_c;    
     track_threshold = p.Results.track_threshold;
     meas_sigma = p.Results.meas_sigma;
+    sigma_v = p.Results.sigma_v;
     metric_type = p.Results.metric_type;
     
     winlen_lm = settings.winlen_lm;
@@ -50,7 +52,7 @@ function model= gen_model(settings,varargin)
     model.F= [ model.A0 zeros(2,2); zeros(2,2) model.A0 ];                      
     model.B0= [ (model.T^2)/2; model.T ];                       
     model.B= [ model.B0 zeros(2,1); zeros(2,1) model.B0 ];                      
-    model.sigma_v = 5;                                                                              %process noise
+    model.sigma_v = sigma_v;                                                                              %process noise
     model.Q= (model.sigma_v)^2* model.B*model.B';                                                   %process noise covariance
     model.sigma_v_truth = settings.sigma_v_truth;                                                   %small processing noise in generating ground truth
 

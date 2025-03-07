@@ -21,8 +21,8 @@ function settings =  gen_settings(varargin)
     switch p.Results.case_id
         case "attack_00" % Scenario 1 
             
-            settings.K = 85;                                                                        %search time
-            settings.limit = [-500,1500;0,1000];                                                    %search area
+            settings.K = 80;                                                                        %search time
+            settings.limit = [-500,2500;0,1000];                                                    %search area
             
             if p.Results.n_sensors > 0
                 n_sensors = p.Results.n_sensors;                                                    %input number of sensors, max = 2 for this case
@@ -62,14 +62,14 @@ function settings =  gen_settings(varargin)
             settings.xstart_attack(:,1)  = [ 280; 10 ; 450; 0 ];         settings.tbirth_attack(1)  = 17;          settings.tdeath_attack(1)  = 80;
 
             settings.xstart(:,2)  = [2550; -17; 400; 0];      settings.tbirth(2)  = 28;           settings.tdeath(2)  = 80;
-                        settings.sigma_v_truth = 0.1;                                                           %small processing noise in generating ground truth
+            settings.sigma_v_truth = 0.1;                                                           %small processing noise in generating ground truth
             
             % track matching
             settings.winlen_lm = 5;                                                                 %window length to use for track matching
 
         case "attack_01" % Scenario 1 
             
-            settings.K = 85;                                                                        %search time
+            settings.K = 80;                                                                        %search time
             settings.limit = [-500,1500;0,1000];                                                    %search area
             
             if p.Results.n_sensors > 0
@@ -109,8 +109,9 @@ function settings =  gen_settings(varargin)
             settings.xstart(:,1)  = [-200; 17; 450; 0];       settings.tbirth(1)  = 1;           settings.tdeath(1)  = 80;
             settings.xstart_attack(:,1)  = [ 280; 10 ; 450; 0 ];         settings.tbirth_attack(1)  = 17;          settings.tdeath_attack(1)  = 80;
 
-            settings.xstart(:,2)  = [2550; -17; 400; 0];      settings.tbirth(2)  = 28;           settings.tdeath(2)  = 80;
-                        settings.sigma_v_truth = 0.1;                                                           %small processing noise in generating ground truth
+            % settings.xstart(:,2)  = [2550; -17; 400; 0];      settings.tbirth(2)  = 28;           settings.tdeath(2)  = 80;
+            
+            settings.sigma_v_truth = 0.1;                                                           %small processing noise in generating ground truth
             
             % track matching
             settings.winlen_lm = 5;          
@@ -152,8 +153,8 @@ function settings =  gen_settings(varargin)
             % object info
             settings.xstart(:,1)  = [ -200; 17 ; 600; 0 ];       settings.tbirth(1)  = 1;           settings.tdeath(1)  = 80;
             settings.xstart(:,2)  = [ 1200; -17 ; 400; 0 ];      settings.tbirth(2)  = 1;           settings.tdeath(2)  = 80;
-            settings.xstart(:,3)  = [ 0; 20 ; 200; 10 ];         settings.tbirth(3)  = 10;          settings.tdeath(3)  = 60;
-            settings.sigma_v_truth = 0.1;                                                           %small processing noise in generating ground truth
+            %settings.xstart(:,3)  = [ 0; 20 ; 200; 10 ];         settings.tbirth(3)  = 10;          settings.tdeath(3)  = 60;
+            settings.sigma_v_truth = 0;                                                           %small processing noise in generating ground truth
             
             % track matching
             settings.winlen_lm = 5;                                                                 %window length to use for track matching
