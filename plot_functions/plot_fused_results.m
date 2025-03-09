@@ -1,4 +1,4 @@
-function [h_ospa,h_ospa2,h_card,h_proc] =  plot_fused_results(model,truth,fused_agents,varargin)
+function [h_ospa,h_ospa2,h_card,h_proc, h_weights] =  plot_fused_results(model,truth,fused_agents,varargin)
     % Plot performance in terms of OSPA, OSPA2, Cardinality and fusing
     % time via model, truth, fused_agents, and a variable-length input argument list, i.e., a pair of (property, value).
     
@@ -72,6 +72,33 @@ function [h_ospa,h_ospa2,h_card,h_proc] =  plot_fused_results(model,truth,fused_
     xlabel('Time Step');
     grid on;
     set(gca, 'XLim',[1 model.K],'FontSize', font_size,'XGrid','off','YGrid','on', 'FontName', font_name);
+
+    % --- Fusion Weights Subplots
+    n_sensors = length(fused_agents); % Number of sensors
+    h_weights = figure();
+    set(gcf, 'color', 'w', 'Position', [1300, 300, 800, 600]); % Adjusted size
+    tiledlayout(ceil(sqrt(n_sensors)), ceil(sqrt(n_sensors))); % Create a grid of subplots
+
+    for s = 1:n_sensors
+        nexttile;
+        hold on;
+        title(sprintf('Fusion Weights for Sensor %d', s));
+        xlabel('Time Step');
+        ylabel('Fusion Weight');
+        grid on;
+
+        % Loop through time steps
+        for k = 1:model.K
+            if isfield(fused_agents{s}, 'fused_weights') && length(fused_agents{s}.fused_weights) >= k
+                if ~isempty(fused_agents{s}.fused_weights{k})
+                    plot(k * ones(size(fused_agents{s}.fused_weights{k})), fused_agents{s}.fused_weights{k}, 'bo');
+                end
+            end
+        end
+        hold off;
+    end
+
+
 end
 
 

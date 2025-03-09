@@ -82,7 +82,7 @@ function truth = gen_truth_attack_scenario(model, settings)
         for k = tbirth_attack(attacknum):min(tdeath_attack(attacknum), truth.K)
             
             % --- Modify Fake Target Trajectory ---
-            if attacknum == 1 && strcmp(case_id, "attack_00") 
+            if attacknum == 1 && strcmp(case_id, "attack_02") 
                 if k < 37
                     targetstate(1) = targetstate(1) +30;  
                 elseif k <49
