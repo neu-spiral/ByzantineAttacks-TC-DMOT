@@ -1,4 +1,4 @@
-function fused_agents = fusion_main_tc(model,fused_agents,k)
+function fused_agents = fusion_main_tc(settings, model,fused_agents,k)
     % Algorithm 2: FuseMultiNodes
     % Including two steps:
     % Step 1: Fusing each neighbor node to the selected agent
@@ -15,14 +15,23 @@ function fused_agents = fusion_main_tc(model,fused_agents,k)
             est_temp = cell(n_neighbor,1);
             l_asso_hist = fused_agents{s}.l_asso_hist;
             l_space = fused_agents{s}.l_space;
-            
+
+            % --- Step 1 - Fusing each neighbor node to the selected agent
+            fused_agents{s}.fused_weights{k} = zeros(n_neighbor,1); % Initialize weight storage
             % --- Step 1 - Fusing each neighbor node to the selected agent
             for i = n_neighbor: -1 : 1
                 cur_neighbor_id = neighbor_list(i);
                 cur_Agent = fused_agents{cur_neighbor_id};
                 cur_Agent.est.source_id = cur_neighbor_id;
-                fused_weight = i/(n_neighbor+1);
-                    est_temp{i}.source_id = cur_neighbor_id;
+                % fused_weight = i/(n_neighbor+1); --> MISTAKE???
+                fused_weight = 0;
+                % FUSION 2025 Store fusion weight at time step k
+                fused_agents{s}.fused_weights{k}(i) = fused_weight;
+                est_temp{i}.source_id = cur_neighbor_id;
+                % matching is calculated inside fuse_two_estimated_tracks! 
+                if k>60 && s==2
+                    disp('stop')
+                end
                 [est_temp{i}.X{1},est_temp{i}.N(1),est_temp{i}.L{1},l_space,l_asso_hist] = fuse_two_estimated_tracks(sel_Agent.est,cur_Agent.est,l_space,l_asso_hist,model.ospa,k,fused_weight);
             end
 

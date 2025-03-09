@@ -71,13 +71,47 @@ function fused_agents = run_fused_filter(settings,model,truth,meas)
             end
 
             [fused_agents{s}.est.X{k},fused_agents{s}.est.N(k),fused_agents{s}.est.L{k}]= extract_estimates(tt_lmb_update,model); %extract estimates for fusion
+            
+            % FUSION 2025
+            % *** INSERT ATTACK FOR NODE 2 ***
+            if strcmp(settings.p.Results.case_id, "attack_02") && s == 2
+                % if k>60
+                % 
+                %     fused_agents{s}.est.X{k}
+                %     fused_agents{s}.est.L{k}
+                %     disp('debug')
+                % end
+                if k >= settings.k_0 && k <= settings.k_1
+                    % --- Find the index of the target we need to replace ---
+                    attack_label = 200001; % Label of the target being attacked
+                    label_idx = find(fused_agents{s}.est.L{k}(2, :) == attack_label, 1);  % Locate in the list
+            
+                    % --- Only replace the corresponding state if found ---
+                    if ~isempty(label_idx)
+                        % Replace with the fake attack trajectory
+                        fused_agents{s}.est.X{k} = truth.attack.X{k}; 
+                        
+                        % Send ONLY the attack label (removing others)
+                        fused_agents{s}.est.L{k} = fused_agents{s}.est.L{k}(:, label_idx); 
+                        fused_agents{s}.est.N(k) = 1; % There is now only one estimated target
+                    else
+                        % If for some reason the label isn't found, send NO DETECTIONS (stealth mode)
+                        fused_agents{s}.est.X{k} = []; 
+                        fused_agents{s}.est.L{k} = []; 
+                        fused_agents{s}.est.N(k) = 0; 
+                    end
+                end
+            end
+
+
+                    
             fused_agents{s}.tt_lmb_update = tt_lmb_update;                                              %store the posterior lmb density
             fused_agents{s}.est.source_id = s;
         end
 
         % --- data fusion (MAIN PROGRAM here) 
         k_fused_start_time = tic;
-        fused_agents = fusion_main_tc(model,fused_agents,k);                                            %fusion using track consensus method
+        fused_agents = fusion_main_tc(settings, model,fused_agents,k);                                            %fusion using track consensus method
         
         % --- update time
         each_fused_time(k) = toc(k_fused_start_time);

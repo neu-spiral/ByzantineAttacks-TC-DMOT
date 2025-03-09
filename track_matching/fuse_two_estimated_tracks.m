@@ -75,6 +75,10 @@ function [X_report,N_report,L_report,l_space,l_asso_hist] = fuse_two_estimated_t
         if isempty(Q)
             X_fused = []; l_fused = zeros(2,0);
         else
+            % if s1==2 && s2==3 && k>40
+            %     disp('debug')
+            % end
+            disp(w)
             [X_fused,l_fused] = fuse_matched_tracks(X_track1(:,end,:),X_track2(:,end,:),l_list1,l_list2,Q,w);
         end
         % --- keep the unmatched tracks
