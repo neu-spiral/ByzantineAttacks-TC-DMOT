@@ -1,6 +1,9 @@
 function l_temp_u = update_l_report_from_asso_hist(fused_agents,s,k)
     % Algorithm B.3 UpdateLabels
     [G,l_space] = create_a_graph_from_asso_hist(fused_agents); 
+    if k>=60 && s==3
+        disp('stop')
+    end
     birth_unique = fused_agents{s}.model.ospa.unique_multiplier^2;    
     l_temp = fused_agents{s}.est_fused.L{k};    
     nl_temp = size(l_temp,2);

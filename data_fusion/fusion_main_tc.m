@@ -23,7 +23,7 @@ function fused_agents = fusion_main_tc(settings, model,fused_agents,k)
                 cur_neighbor_id = neighbor_list(i);
                 cur_Agent = fused_agents{cur_neighbor_id};
                 cur_Agent.est.source_id = cur_neighbor_id;
-                % fused_weight = i/(n_neighbor+1); --> MISTAKE???
+                % fused_weight = i/(n_neighbor+1);% --> MISTAKE???
                 fused_weight = 0;
                 % FUSION 2025 Store fusion weight at time step k
                 fused_agents{s}.fused_weights{k}(i) = fused_weight;
@@ -53,6 +53,11 @@ function fused_agents = fusion_main_tc(settings, model,fused_agents,k)
 
             % --- Step 3: Ensure label consensus
             fused_agents{s}.est_fused.L{k} = update_l_report_from_asso_hist(fused_agents,s,k);
+            % [G,l_space] = create_a_graph_from_asso_hist(fused_agents); 
+            % if k>=60
+            %     s
+            %     disp('stop')
+            % end
         catch err
             err_str = sprintf('fusion_main_tc error  of agent %d with message = %s\n',s,err.message);
             disp(err_str);

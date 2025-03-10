@@ -82,7 +82,7 @@ function truth = gen_truth_attack_scenario(model, settings)
         for k = tbirth_attack(attacknum):min(tdeath_attack(attacknum), truth.K)
             
             % --- Modify Fake Target Trajectory ---
-            if attacknum == 1 && strcmp(case_id, "attack_02") 
+            if attacknum == 1 && strcmp(case_id, "attack_02") % until march 9th
                 if k < 37
                     targetstate(1) = targetstate(1) +30;  
                 elseif k <49
@@ -91,15 +91,18 @@ function truth = gen_truth_attack_scenario(model, settings)
                 elseif k < 55
                     last_x = 22 * cos(0.1 * (49 - 37));  
                     last_y = 10 * sin(0.1 * (49 - 37));  
-                
+
                     targetstate(1) = targetstate(1) + last_x + 30 * sin(0.25 * (k - 49)); 
                     targetstate(3) = targetstate(3) + last_y + 1 * cos(0.25 * (k - 49));
-                elseif k<62
-                    targetstate(1) = targetstate(1) +30;  
+                % elseif k<56
+                %     targetstate(1) = targetstate(1) +30;  
+                elseif k < 67
+                    targetstate(1) = targetstate(1) + 20 * cos(0.1 * (k-55)); 
+                    targetstate(3) = targetstate(3) + 10 * sin(0.1 * (k-55));
                 else
                     if k <= length(truth.X) && ~isempty(truth.X{k})  
                         idx_target2 = find(truth.track_list{k} == 2, 1); % Find Target 2 at step k
-                        
+
                         if ~isempty(idx_target2)
                             targetstate = truth.X{k}(:, idx_target2); % Copy state from Target 2
                         end
@@ -111,6 +114,48 @@ function truth = gen_truth_attack_scenario(model, settings)
                 % else
                 %     targetstate(3) = targetstate(3) +20;  
                 end
+            % if attacknum == 1 && strcmp(case_id, "attack_02") % until march 9th
+            %     if k < 37
+            %         targetstate(1) = targetstate(1) +30;  
+            %     elseif k <49
+            %         targetstate(1) = targetstate(1) + 22 * cos(0.1 * (k-37)); 
+            %         targetstate(3) = targetstate(3) + 10 * sin(0.1 * (k-37));
+            %     elseif k < 55
+            %         last_x = 22 * cos(0.1 * (49 - 37));  
+            %         last_y = 10 * sin(0.1 * (49 - 37));  
+            % 
+            %         targetstate(1) = targetstate(1) + last_x + 30 * sin(0.25 * (k - 49)); 
+            %         targetstate(3) = targetstate(3) + last_y + 1 * cos(0.25 * (k - 49));
+            %     elseif k<62
+            %         targetstate(1) = targetstate(1) +30;  
+            %     else
+            %         if k <= length(truth.X) && ~isempty(truth.X{k})  
+            %             idx_target2 = find(truth.track_list{k} == 2, 1); % Find Target 2 at step k
+            % 
+            %             if ~isempty(idx_target2)
+            %                 targetstate = truth.X{k}(:, idx_target2); % Copy state from Target 2
+            %             end
+            %         end
+            %     % IF we do not want to steal trajectory directly from tgt2
+            %     % elseif k<65
+            %     %     targetstate(1) = targetstate(1) + 22 * cos(0.02 * (k-58)); 
+            %     %     targetstate(3) = targetstate(3) + 30 * sin(0.2 * (k-58));
+            %     % else
+            %     %     targetstate(3) = targetstate(3) +20;  
+            %     end
+            % if attacknum == 1 && strcmp(case_id, "attack_02") 
+            %     if k < 43
+            %         targetstate(1) = targetstate(1) +30;  
+            %     elseif k <59
+            %         targetstate(1) = targetstate(1) + 38 * cos(0.1 * (k-43)); 
+            %         targetstate(3) = targetstate(3) + 8 * sin(0.1 * (k-43)); 
+            %         last_x = targetstate(1);
+            %     elseif k <62
+            %         targetstate(1) = last_x; 
+            %         targetstate(3) = targetstate(3) + 5;
+            %     else
+            %         targetstate = truth.X{k}(:,2);
+            %     end
             elseif attacknum == 1 && strcmp(case_id, "attack_01") 
 
                 if k < 38

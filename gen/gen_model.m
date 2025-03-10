@@ -76,7 +76,7 @@ function model= gen_model(settings,varargin)
     model.text_offset = 20;                     
 
     % --- OSPA                      
-    model.ospa.c = 100;                                                                             %OSPA cut-off value 
+    model.ospa.c = 50;                                                                             %OSPA cut-off value 
     model.ospa.p = 1;                                                                               %OSPA order (integer) value
     model.ospa.q = 1;                                                                               %OSPA2 order (integer) value
     model.ospa.win_len = 10;                                                                        %window length of computing OSPA2 for reporting performance

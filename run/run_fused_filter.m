@@ -25,6 +25,7 @@ function fused_agents = run_fused_filter(settings,model,truth,meas)
         fused_agents{s}.lmb_hist = cell(model.K,1);
         fused_agents{s}.lmb_hist_fused = cell(model.K,1);
     end
+    fused_agents{2}.delta = 0;
     
     % --- record processing time performance
     start_time = tic;
@@ -36,7 +37,7 @@ function fused_agents = run_fused_filter(settings,model,truth,meas)
         k_start_time = tic;
         fprintf('Running the fused filter using %s at time %d/%d \n',fused_strategy,k,model.K);
 
-        for s = 1 : n_s
+        for s = [1,3,2]
             model = update_model_info(model,settings.source_info{s});
             
             % --- initialize at k = 1
@@ -90,7 +91,6 @@ function fused_agents = run_fused_filter(settings,model,truth,meas)
                     if ~isempty(label_idx)
                         % Replace with the fake attack trajectory
                         fused_agents{s}.est.X{k} = truth.attack.X{k}; 
-                        
                         % Send ONLY the attack label (removing others)
                         fused_agents{s}.est.L{k} = fused_agents{s}.est.L{k}(:, label_idx); 
                         fused_agents{s}.est.N(k) = 1; % There is now only one estimated target
@@ -100,11 +100,24 @@ function fused_agents = run_fused_filter(settings,model,truth,meas)
                         fused_agents{s}.est.L{k} = []; 
                         fused_agents{s}.est.N(k) = 0; 
                     end
+                % elseif k > settings.k_1
+                %     attack_label = 200002; % Label of the target being attacked
+                %     label_idx = find(fused_agents{s}.est.L{k}(2, :) == attack_label, 1);  % Locate in the list
+                %     if ~isempty(label_idx)
+                %         % Replace with the fake attack trajectory
+                %         fused_agents{s}.est.X{k} = fused_agents{s}.est.X{k}(:, label_idx); 
+                % 
+                %         % Send ONLY the attack label (removing others)
+                %         fused_agents{s}.est.L{k} = fused_agents{s}.est.L{k}(:, label_idx); 
+                %         fused_agents{s}.est.N(k) = 1; % There is now only one estimated target
+                %     else
+                %         % If for some reason the label isn't found, send NO DETECTIONS (stealth mode)
+                %         fused_agents{s}.est.X{k} = []; 
+                %         fused_agents{s}.est.L{k} = []; 
+                %         fused_agents{s}.est.N(k) = 0; 
+                    % end
                 end
             end
-
-
-                    
             fused_agents{s}.tt_lmb_update = tt_lmb_update;                                              %store the posterior lmb density
             fused_agents{s}.est.source_id = s;
         end

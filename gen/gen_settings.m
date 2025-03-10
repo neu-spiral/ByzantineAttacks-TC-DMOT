@@ -167,6 +167,7 @@ function settings =  gen_settings(varargin)
             % Define Attack TIMELINE
             settings.k_0 = 18;   % Attack starts at this time step
             settings.k_1 = 70;   % Attack stops at this time step (resumes sending real data)
+            settings.k_2 = 50; %When node 2 starts sending alternative trajectory for drone
 
         case "1" % Scenario 1 
             
